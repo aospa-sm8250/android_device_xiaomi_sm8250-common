@@ -301,6 +301,7 @@ PRODUCT_COPY_FILES += \
 
 # QTI
 TARGET_COMMON_QTI_COMPONENTS := \
+    av \
     init \
     overlay \
     perf \
