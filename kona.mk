@@ -220,21 +220,12 @@ PRODUCT_PACKAGES += \
     fstab.qcom.vendor_ramdisk
 
 PRODUCT_PACKAGES += \
-    init.class_main.sh \
-    init.mdm.sh \
     init.mi.btmac.sh \
-    init.qcom.early_boot.sh \
-    init.qcom.post_boot.sh \
-    init.qcom.sh \
     init.qti.dcvs.sh
 
 PRODUCT_PACKAGES += \
-    init.qcom.power.rc \
-    init.qcom.rc \
-    init.recovery.qcom.rc \
     init.target.rc \
-    init.xiaomi.rc \
-    ueventd.qcom.rc
+    init.xiaomi.rc
 
 $(call soong_config_set,libinit,vendor_init_lib,//$(LOCAL_PATH):init_xiaomi_kona)
 
@@ -320,6 +311,10 @@ PRODUCT_COPY_FILES += \
 # Public libraries
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
+
+# QTI
+TARGET_COMMON_QTI_COMPONENTS := \
+    init
 
 # Sensors
 PRODUCT_PACKAGES += \
