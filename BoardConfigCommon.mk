@@ -1,5 +1,6 @@
 #
 # Copyright (C) 2021 The LineageOS Project
+# Copyright (C) 2026 The Paranoid Android Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -69,8 +70,8 @@ ifeq ($(TARGET_HAS_UDFPS),true)
 TARGET_USES_FOD_ZPOS := true
 endif
 
-# Filesystem
-TARGET_FS_CONFIG_GEN := $(COMMON_PATH)/config.fs
+# GKI
+BOARD_USES_GENERIC_KERNEL_IMAGE := true
 
 # Kernel
 ifeq ($(PRODUCT_VIRTUAL_AB_OTA),true)
@@ -88,11 +89,8 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 TARGET_KERNEL_NO_GCC := true
-TARGET_KERNEL_SOURCE := kernel/xiaomi/sm8250
-TARGET_KERNEL_CONFIG := \
-    vendor/kona-perf_defconfig \
-    vendor/debugfs.config \
-    vendor/xiaomi/sm8250-common.config
+KERNEL_DEFCONFIG := vendor/kona-perf_defconfig
+KERNEL_FRAGMENT_CONFIG := vendor/debugfs.config vendor/xiaomi/sm8250-common.config
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
@@ -130,13 +128,6 @@ BOARD_SUPER_PARTITION_GROUPS := qti_dynamic_partitions
 BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST := $(ALL_PARTITIONS)
 BOARD_QTI_DYNAMIC_PARTITIONS_SIZE := 9122611200 # (BOARD_SUPER_PARTITION_SIZE - 4MiB)
 
-# Partitions - reserved size
--include vendor/lineage/config/BoardConfigReservedSize.mk
-
-# Platform
-BOARD_USES_QCOM_HARDWARE := true
-TARGET_BOARD_PLATFORM := kona
-
 # Properties
 TARGET_ODM_PROP += $(COMMON_PATH)/odm.prop
 TARGET_PRODUCT_PROP += $(COMMON_PATH)/product.prop
@@ -148,10 +139,10 @@ endif
 
 # Recovery
 ifeq ($(TARGET_IS_VAB),true)
-TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab_AB.qcom
+TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/init/etc/fstab_AB.qcom
 else
 BOARD_INCLUDE_RECOVERY_DTBO := true
-TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/fstab.qcom
+TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/init/etc/fstab.qcom
 endif
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -174,7 +165,6 @@ endif
 VENDOR_SECURITY_PATCH := 2025-04-01
 
 # Sepolicy
-include device/qcom/sepolicy_vndr/SEPolicy.mk
 include device/lineage/sepolicy/libperfmgr/sepolicy.mk
 SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/private
 SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/public
@@ -207,14 +197,11 @@ BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 endif
 
 # VINTF
-DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
-    hardware/qcom-caf/common/vendor_framework_compatibility_matrix.xml \
-    hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += hardware/xiaomi/vintf/xiaomi_framework_compatibility_matrix.xml
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest.xml
 ifneq ($(TARGET_IS_TABLET),true)
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest_phone.xml
 endif
-DEVICE_MATRIX_FILE += hardware/qcom-caf/common/compatibility_matrix.xml
 ODM_MANIFEST_SKUS += nfc
 ODM_MANIFEST_NFC_FILES := $(COMMON_PATH)/manifest_nfc.xml
 

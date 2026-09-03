@@ -1,14 +1,12 @@
 #
 # Copyright (C) 2021-2024 The LineageOS Project
+# Copyright (C) 2026 The Paranoid Android Project
 #
 # SPDX-License-Identifier: Apache-2.0
 #
 
 # Setup dalvik vm configs
 $(call inherit-product, frameworks/native/build/phone-xhdpi-6144-dalvik-heap.mk)
-
-# Add common definitions for Qualcomm
-$(call inherit-product, hardware/qcom-caf/common/common.mk)
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -67,8 +65,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_ven
 PRODUCT_PACKAGES += \
     android.hardware.boot-service.qti \
     android.hardware.boot-service.qti.recovery
-
-$(call soong_config_set_bool,QTI_GPT_UTILS,USE_BSG_FRAMEWORK,false)
 
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -176,10 +172,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.drm-service.clearkey
 
-# fastbootd
-PRODUCT_PACKAGES += \
-    fastbootd
-
 # Fingerprint
 ifneq ($(TARGET_IS_TABLET),true)
 PRODUCT_PACKAGES += \
@@ -222,6 +214,28 @@ PRODUCT_PACKAGES += \
     IPACM_cfg.xml
 
 # Init
+PRODUCT_PACKAGES += \
+    fstab.qcom \
+    fstab.qcom.ramdisk \
+    fstab.qcom.vendor_ramdisk
+
+PRODUCT_PACKAGES += \
+    init.class_main.sh \
+    init.mdm.sh \
+    init.mi.btmac.sh \
+    init.qcom.early_boot.sh \
+    init.qcom.post_boot.sh \
+    init.qcom.sh \
+    init.qti.dcvs.sh
+
+PRODUCT_PACKAGES += \
+    init.qcom.power.rc \
+    init.qcom.rc \
+    init.recovery.qcom.rc \
+    init.target.rc \
+    init.xiaomi.rc \
+    ueventd.qcom.rc
+
 $(call soong_config_set,libinit,vendor_init_lib,//$(LOCAL_PATH):init_xiaomi_kona)
 
 # Input
@@ -244,7 +258,7 @@ PRODUCT_SET_DEBUGFS_RESTRICTIONS := true
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light-service.lineage
+    android.hardware.light-service.xiaomi
 
 # Lineage Health
 PRODUCT_PACKAGES += \
@@ -281,8 +295,6 @@ TARGET_SUPPORTS_OMX_SERVICE := false
 PRODUCT_PACKAGES += \
     CarrierConfigOverlayCommon \
     FrameworkResOverlayCommon \
-    LineageSDKOverlayCommon \
-    LineageSettingsOverlayCommon \
     SettingsOverlayCommon \
     SettingsProviderOverlayCommon \
     SystemUIOverlayCommon \
@@ -294,10 +306,8 @@ PRODUCT_ENFORCE_RRO_TARGETS := *
 # Partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
-PRODUCT_PACKAGES += \
-    vendor_bt_firmware_mountpoint \
-    vendor_dsp_mountpoint \
-    vendor_firmware_mnt_mountpoint
+# Platform
+TARGET_BOARD_PLATFORM := kona
 
 # Power
 PRODUCT_PACKAGES += \
@@ -311,34 +321,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
 
-# QTI fwk-detect
-PRODUCT_PACKAGES += \
-    libqti_vndfwk_detect.vendor \
-    libvndfwk_detect_jni.qti.vendor # Needed by CNE app
-
-# Rootdir
-PRODUCT_PACKAGES += \
-    fstab.qcom \
-    fstab.qcom.ramdisk \
-    fstab.qcom.vendor_ramdisk
-
-PRODUCT_PACKAGES += \
-    init.class_main.sh \
-    init.mdm.sh \
-    init.mi.btmac.sh \
-    init.qcom.early_boot.sh \
-    init.qcom.post_boot.sh \
-    init.qcom.sh \
-    init.qti.dcvs.sh
-
-PRODUCT_PACKAGES += \
-    init.qcom.power.rc \
-    init.qcom.rc \
-    init.recovery.qcom.rc \
-    init.target.rc \
-    init.xiaomi.rc \
-    ueventd.qcom.rc
-
 # Sensors
 PRODUCT_PACKAGES += \
     android.hardware.sensors@1.0-impl-xiaomi \
@@ -347,21 +329,10 @@ PRODUCT_PACKAGES += \
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
-    hardware/google/interfaces \
-    hardware/google/pixel \
-    hardware/lineage/interfaces/power-libperfmgr \
-    hardware/qcom-caf/common/libqti-perfd-client \
-    hardware/xiaomi \
-    vendor/qcom/opensource/usb/etc
+    hardware/xiaomi
 
 # Telephony
 PRODUCT_PACKAGES += \
-    ims-ext-common \
-    ims_ext_common.xml \
-    qti-telephony-hidl-wrapper \
-    qti_telephony_hidl_wrapper.xml \
-    qti-telephony-utils \
-    qti_telephony_utils.xml \
     telephony-ext \
     xiaomi-telephony-stub
 
