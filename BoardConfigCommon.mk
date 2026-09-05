@@ -89,8 +89,7 @@ BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 TARGET_KERNEL_NO_GCC := true
-KERNEL_DEFCONFIG := vendor/kona-perf_defconfig
-KERNEL_FRAGMENT_CONFIG := vendor/debugfs.config vendor/xiaomi/sm8250-common.config
+KERNEL_DEFCONFIG := vendor/pipa_defconfig
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
